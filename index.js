@@ -29,14 +29,19 @@ async function run() {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skipIndex = (page - 1) * limit;
+        const searchQuery = req.query.search || '';
 
-        const products = await allProducts.find()
-          .sort({ createdAt: -1 }) // Sort by creation date
+        const query = searchQuery
+      ? { productName: { $regex: searchQuery, $options: 'i' } } // Case-insensitive search
+      : {};
+
+        const products = await allProducts.find(query)
+          // .sort({ createdAt: -1 }) // Sort by creation date
           .limit(limit)
           .skip(skipIndex)
           .toArray(); // Convert the cursor to an array
   
-        const totalProducts = await allProducts.countDocuments();
+        const totalProducts = await allProducts.countDocuments(query);
         const totalPages = Math.ceil(totalProducts / limit);
   
         res.status(200).json({
