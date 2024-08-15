@@ -24,26 +24,39 @@ async function run() {
 
     const allProducts = client.db("Job-Task").collection("all-products");
 
-    app.get('/products', async (req, res) => {
+    app.get("/products", async (req, res) => {
       try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skipIndex = (page - 1) * limit;
-        const searchQuery = req.query.search || '';
+        const searchQuery = req.query.search || "";
+        const sortOption = req.query.sort || "";
 
         const query = searchQuery
-      ? { productName: { $regex: searchQuery, $options: 'i' } } // Case-insensitive search
-      : {};
+          ? { productName: { $regex: searchQuery, $options: "i" } } // Case-insensitive search
+          : {};
 
-        const products = await allProducts.find(query)
+        let sort = {};
+        if (sortOption === "priceLowToHigh") {
+          sort = { price: 1 };
+        } else if (sortOption === "priceHighToLow") {
+          sort = { price: -1 };
+        } else if (sortOption === "newestFirst") {
+          sort = { createdAt: -1 };
+        }
+
+        const products = await allProducts
+          .find(query)
           // .sort({ createdAt: -1 }) // Sort by creation date
+          .sort(sort)
           .limit(limit)
           .skip(skipIndex)
+          .filter()
           .toArray(); // Convert the cursor to an array
-  
+
         const totalProducts = await allProducts.countDocuments(query);
         const totalPages = Math.ceil(totalProducts / limit);
-  
+
         res.status(200).json({
           totalProducts,
           totalPages,
@@ -52,13 +65,15 @@ async function run() {
         });
       } catch (error) {
         console.error(error); // Log the error for debugging
-        res.status(500).json({ error: 'Server error' });
+        res.status(500).json({ error: "Server error" });
       }
     });
 
     // Ping the database to confirm connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } catch (error) {
     console.error("Failed to connect to MongoDB", error);
   } finally {
