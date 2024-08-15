@@ -27,14 +27,36 @@ async function run() {
     app.get("/products", async (req, res) => {
       try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = parseInt(req.query.limit) || 12;
         const skipIndex = (page - 1) * limit;
         const searchQuery = req.query.search || "";
         const sortOption = req.query.sort || "";
 
-        const query = searchQuery
-          ? { productName: { $regex: searchQuery, $options: "i" } } // Case-insensitive search
-          : {};
+        const brandFilter = req.query.brand || "";
+        const categoryFilter = req.query.category || "";
+        const minPrice = parseInt(req.query.minPrice) || 0;
+        const maxPrice =
+          parseInt(req.query.maxPrice) || Number.MAX_SAFE_INTEGER;
+
+        // const query = searchQuery
+        //   ? { productName: { $regex: searchQuery, $options: "i" } } // Case-insensitive search
+        //   : {};
+
+        let query = {
+          price: { $gte: minPrice, $lte: maxPrice },
+        };
+
+        if (searchQuery) {
+          query.productName = { $regex: searchQuery, $options: "i" };
+        }
+
+        if (brandFilter) {
+          query.brandName = brandFilter;
+        }
+
+        if (categoryFilter) {
+          query.category = categoryFilter;
+        }
 
         let sort = {};
         if (sortOption === "priceLowToHigh") {
@@ -44,15 +66,13 @@ async function run() {
         } else if (sortOption === "newestFirst") {
           sort = { createdAt: -1 };
         }
-
+        console.log(query);
         const products = await allProducts
           .find(query)
-          // .sort({ createdAt: -1 }) // Sort by creation date
           .sort(sort)
           .limit(limit)
           .skip(skipIndex)
-          .filter()
-          .toArray(); // Convert the cursor to an array
+          .toArray();
 
         const totalProducts = await allProducts.countDocuments(query);
         const totalPages = Math.ceil(totalProducts / limit);
@@ -64,7 +84,7 @@ async function run() {
           products,
         });
       } catch (error) {
-        console.error(error); // Log the error for debugging
+        console.error(error);
         res.status(500).json({ error: "Server error" });
       }
     });
