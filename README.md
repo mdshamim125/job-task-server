@@ -9,8 +9,8 @@ This is the backend of the project, built with [Node.js](https://nodejs.org/) an
 - Secure and scalable architecture.
 
 ## Prerequisites
-- Node.js (v14 or above)
-- npm or yarn
+- Node.js 
+- npm 
 - MongoDB
 
 ## Getting Started

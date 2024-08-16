@@ -66,7 +66,7 @@ async function run() {
         } else if (sortOption === "newestFirst") {
           sort = { createdAt: -1 };
         }
-        console.log(query);
+        // console.log(query);
         const products = await allProducts
           .find(query)
           .sort(sort)
@@ -84,7 +84,7 @@ async function run() {
           products,
         });
       } catch (error) {
-        console.error(error);
+        // console.error(error);
         res.status(500).json({ error: "Server error" });
       }
     });
