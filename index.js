@@ -5,23 +5,23 @@ require("dotenv").config();
 const port = process.env.PORT || 5000;
 const app = express();
 
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:5173",
-//       "http://localhost:5174",
-//       "https://travel-blog-cf01e.web.app",
-//       "https://travel-blog-cf01e.firebaseapp.com",
-//     ],
-//     credentials: true,
-//   })
-// );
-
 app.use(
   cors({
-    origin: "*",
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://job-task-ad4b4.web.app",
+      "https://job-task-ad4b4.firebaseapp.com",
+    ],
+    credentials: true,
   })
 );
+
+// app.use(
+//   cors({
+//     origin: "*",
+//   })
+// );
 
 app.use(express.json());
 
