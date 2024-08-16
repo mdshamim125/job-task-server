@@ -1,9 +1,4 @@
 
-### **Backend README.md**
-
-```markdown
-# Backend Project
-
 ## Project Description
 This is the backend of the project, built with [Node.js](https://nodejs.org/) and [Express.js](https://expressjs.com/). The backend manages product data, provides APIs for the frontend, and handles filtering, sorting, and searching functionalities.
 
