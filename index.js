@@ -11,6 +11,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
+      // "https://job-task-client-lilac.vercel.app",
       "https://job-task-ad4b4.web.app",
       "https://job-task-ad4b4.firebaseapp.com",
       "https://job-task-server-iota.vercel.app",
@@ -60,9 +61,20 @@ async function run() {
         //   ? { productName: { $regex: searchQuery, $options: "i" } } // Case-insensitive search
         //   : {};
 
-        let query = {
-          price: { $gte: minPrice, $lte: maxPrice },
-        };
+        // let query = {
+        //   price: { $gte: minPrice, $lte: maxPrice },
+        // };
+
+        let query = {};
+
+        // Add price filter based on the provided minPrice and maxPrice
+        if (minPrice && maxPrice) {
+          query.price = { $gte: minPrice, $lte: maxPrice };
+        } else if (minPrice) {
+          query.price = { $gte: minPrice };
+        } else if (maxPrice) {
+          query.price = { $lte: maxPrice };
+        }
 
         if (searchQuery) {
           query.productName = { $regex: searchQuery, $options: "i" };
