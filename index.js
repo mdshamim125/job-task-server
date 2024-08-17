@@ -14,12 +14,18 @@ app.use(
       // "https://job-task-client-lilac.vercel.app",
       "https://job-task-ad4b4.web.app",
       "https://job-task-ad4b4.firebaseapp.com",
+      "https://job-task-server-1fof.onrender.com",
       "https://job-task-server-iota.vercel.app",
     ],
     // methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allow specific methods
     // credentials: true, // Allow credentials if needed
   })
 );
+
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "script-src 'self' blob:;");
+  next();
+});
 
 // app.use(
 //   cors({
@@ -67,7 +73,6 @@ async function run() {
 
         let query = {};
 
-        // Add price filter based on the provided minPrice and maxPrice
         if (minPrice && maxPrice) {
           query.price = { $gte: minPrice, $lte: maxPrice };
         } else if (minPrice) {
