@@ -11,11 +11,9 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      // "https://job-task-client-lilac.vercel.app",
       "https://job-task-ad4b4.web.app",
       "https://job-task-ad4b4.firebaseapp.com",
-      "https://job-task-server-1fof.onrender.com",
-      "https://job-task-server-iota.vercel.app",
+      "https://job-task-server.up.railway.app",
     ],
     // methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allow specific methods
     // credentials: true, // Allow credentials if needed
