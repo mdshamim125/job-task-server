@@ -1,10 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
-const port = process.env.PORT || 5000;
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
+const port = process.env.PORT || 9000;
 
+app.use(express.json());
 app.use(
   cors({
     origin: [
@@ -12,8 +13,10 @@ app.use(
       "http://localhost:5174",
       "https://job-task-ad4b4.web.app",
       "https://job-task-ad4b4.firebaseapp.com",
+      "https://job-task-server-iota.vercel.app",
     ],
-    credentials: true,
+    // methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allow specific methods
+    // credentials: true, // Allow credentials if needed
   })
 );
 
@@ -22,8 +25,6 @@ app.use(
 //     origin: "*",
 //   })
 // );
-
-app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.s1le0vj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
